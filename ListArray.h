@@ -66,4 +66,74 @@ class ListArray : public List<T> {
 
 	}
 
+
+    // Implementación de las funciones virtuales puras
+    void insert(int pos, T e) override {
+        if (pos < 0 || pos > n) {
+            throw std::out_of_range("Índice fuera de rango");
+        }
+
+        if (n == max) {
+            resize(max * 2);  // Redimensionar si es necesario
+        }
+
+        for (int i = n; i > pos; --i) {
+            arr[i] = arr[i - 1];
+        }
+
+        arr[pos] = e;
+        ++n;
+    }
+
+    void append(T e) override {
+        insert(n, e);  // Insertar al final
+    }
+
+    void prepend(T e) override {
+        insert(0, e);  // Insertar al principio
+    }
+
+    T remove(int pos) override {
+        if (pos < 0 || pos >= n) {
+            throw std::out_of_range("Índice fuera de rango");
+        }
+
+        T removedElement = arr[pos];
+        for (int i = pos; i < n - 1; ++i) {
+            arr[i] = arr[i + 1];
+        }
+
+        --n;
+
+        if (n < max / 4 && max > MINSIZE) {
+            resize(max / 2);  // Reducir tamaño si es necesario
+        }
+
+        return removedElement;
+    }
+
+    T get(int pos) override {
+        if (pos < 0 || pos >= n) {
+            throw std::out_of_range("Índice fuera de rango");
+        }
+        return arr[pos];
+    }
+
+    int search(T e) override {
+        for (int i = 0; i < n; ++i) {
+            if (arr[i] == e) {
+                return i;
+            }
+        }
+        return -1;  // No encontrado
+    }
+
+    bool empty() override {
+        return n == 0;
+    }
+
+    int size() override {
+        return n;
+    }
+
 };
